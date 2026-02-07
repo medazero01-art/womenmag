@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { formatPrice, cn } from '@/lib/utils';
+import { API_URL } from '@/lib/api';
 import { Package, Users, AlertCircle, PhoneCall, Check, Truck, X, Eye, FileText, History, Plus, Edit, Trash2, Search, LayoutDashboard, ShoppingBag, Boxes, TrendingUp, ChevronRight } from 'lucide-react';
 
 // Types
@@ -74,7 +75,7 @@ export default function AdminDashboard() {
     const fetchOrders = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/orders`, {
+            const res = await fetch(`${API_URL}/orders`, {
                 credentials: 'include'
             });
             if (res.status === 401) {
@@ -82,7 +83,12 @@ export default function AdminDashboard() {
                 return;
             }
             const data = await res.json();
-            setOrders(data);
+            if (Array.isArray(data)) {
+                setOrders(data);
+            } else {
+                setOrders([]);
+                console.error("Orders data is not an array:", data);
+            }
         } catch (err) {
             console.error(err);
         } finally {
@@ -93,11 +99,20 @@ export default function AdminDashboard() {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products`, {
+            const res = await fetch(`${API_URL}/products`, {
                 credentials: 'include'
             });
+            if (res.status === 401) {
+                router.push('/admin/login');
+                return;
+            }
             const data = await res.json();
-            setProducts(data);
+            if (Array.isArray(data)) {
+                setProducts(data);
+            } else {
+                setProducts([]);
+                console.error("Products data is not an array:", data);
+            }
         } catch (err) {
             console.error(err);
         } finally {
@@ -107,11 +122,13 @@ export default function AdminDashboard() {
 
     const fetchCategories = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products/categories`, {
+            const res = await fetch(`${API_URL}/products/categories`, {
                 credentials: 'include'
             });
             const data = await res.json();
-            setCategories(data);
+            if (Array.isArray(data)) {
+                setCategories(data);
+            }
         } catch (err) {
             console.error(err);
         }
@@ -119,11 +136,17 @@ export default function AdminDashboard() {
 
     const fetchStockLogs = async (productId: number) => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products/${productId}/stock-logs`, {
+            const res = await fetch(`${API_URL}/products/${productId}/stock-logs`, {
                 credentials: 'include'
             });
+            if (res.status === 401) {
+                router.push('/admin/login');
+                return;
+            }
             const data = await res.json();
-            setStockLogs(data);
+            if (Array.isArray(data)) {
+                setStockLogs(data);
+            }
         } catch (err) {
             console.error(err);
         }
@@ -132,7 +155,7 @@ export default function AdminDashboard() {
     const fetchOrderDetails = async (id: number) => {
         setModalLoading(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/orders/${id}`, {
+            const res = await fetch(`${API_URL}/orders/${id}`, {
                 credentials: 'include'
             });
             if (res.status === 401) {
@@ -141,7 +164,7 @@ export default function AdminDashboard() {
             }
             const data = await res.json();
             setSelectedOrder(data);
-            setNoteBuffer(data.admin_note || '');
+            setNoteBuffer(data?.admin_note || '');
         } catch (err) {
             console.error(err);
         } finally {
@@ -153,7 +176,7 @@ export default function AdminDashboard() {
         if (!confirm(`Changer le statut vers ${newStatus} ?`)) return;
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/orders/${id}`, {
+            const res = await fetch(`${API_URL}/orders/${id}`, {
                 method: 'PUT',
                 headers: { 
                     'Content-Type': 'application/json' 
@@ -183,7 +206,7 @@ export default function AdminDashboard() {
     const saveNote = async () => {
         if (!selectedOrder) return;
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/orders/${selectedOrder.id}`, {
+            await fetch(`${API_URL}/orders/${selectedOrder.id}`, {
                 method: 'PUT',
                 headers: { 
                     'Content-Type': 'application/json' 
@@ -200,7 +223,7 @@ export default function AdminDashboard() {
 
     const handleLogout = async () => {
         try {
-            await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/auth/logout`, {
+            await fetch(`${API_URL}/auth/logout`, {
                 method: 'POST',
                 credentials: 'include'
             });
@@ -233,8 +256,8 @@ export default function AdminDashboard() {
 
         try {
             const url = editingProduct 
-                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products/${editingProduct.id}`
-                : `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products`;
+                ? `${API_URL}/products/${editingProduct.id}`
+                : `${API_URL}/products`;
             
             const res = await fetch(url, {
                 method: editingProduct ? 'PUT' : 'POST',
@@ -258,7 +281,7 @@ export default function AdminDashboard() {
     const handleDeleteProduct = async (id: number) => {
         if (!confirm('Voulez-vous vraiment supprimer ce produit ?')) return;
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/products/${id}`, {
+            const res = await fetch(`${API_URL}/products/${id}`, {
                 method: 'DELETE',
                 credentials: 'include'
             });
@@ -332,16 +355,20 @@ export default function AdminDashboard() {
 
     const filteredOrders = orders
         .filter(o => filter === 'all' || o.status === filter)
-        .filter(o => 
-            o.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-            o.customer_phone.includes(searchTerm) ||
-            o.id.toString().includes(searchTerm)
-        );
+        .filter(o => {
+            const name = o.customer_name?.toLowerCase() || '';
+            const phone = o.customer_phone || '';
+            const id = o.id?.toString() || '';
+            const search = searchTerm.toLowerCase();
+            return name.includes(search) || phone.includes(search) || id.includes(search);
+        });
 
-    const filteredProducts = products.filter(p => 
-        p.name_fr.toLowerCase().includes(productSearch.toLowerCase()) ||
-        p.name_ar.toLowerCase().includes(productSearch.toLowerCase())
-    );
+    const filteredProducts = products.filter(p => {
+        const nameFr = p.name_fr?.toLowerCase() || '';
+        const nameAr = p.name_ar?.toLowerCase() || '';
+        const search = productSearch.toLowerCase();
+        return nameFr.includes(search) || nameAr.includes(search);
+    });
 
     if (loading) return <div className="p-8">Chargement...</div>;
 
