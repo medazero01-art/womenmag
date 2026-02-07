@@ -47,6 +47,7 @@ export default function AdminLoginPage() {
                     </div>
                     <h1 className="text-2xl font-bold font-poppins text-text-primary">Accès Admin</h1>
                     <p className="text-sm text-text-secondary mt-2">Women Mag - Gestion</p>
+                    <p className="text-xs text-text-secondary mt-2">This is a demo web application for an E-commerce women clothing website. The login credentials are:</p>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-6">
@@ -58,6 +59,7 @@ export default function AdminLoginPage() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
+                            placeholder="Username: admin"
                         />
                     </div>
                     <div>
@@ -68,6 +70,7 @@ export default function AdminLoginPage() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            placeholder="password: adminpassword123"
                         />
                     </div>
                     
