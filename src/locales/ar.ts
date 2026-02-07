@@ -11,6 +11,7 @@ export const ar = {
         contact: "إتصل بنا",
         callUs: "إتصل بنا",
         cart: "السلة",
+        admin: "الأدمن",
     },
     home: {
         heroTitle: "أناقة وبساطة",

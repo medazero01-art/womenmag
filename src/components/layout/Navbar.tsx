@@ -37,6 +37,9 @@ export default function Navbar() {
           <Link href="/about" className="text-text-secondary hover:text-primary transition-colors">
             {t.nav.about}
           </Link>
+          <Link href="/admin/login" className="text-text-secondary hover:text-primary transition-colors">
+            {t.nav.admin}
+          </Link>
         </div>
 
         {/* Icons */}
@@ -85,6 +88,9 @@ export default function Navbar() {
           </Link>
           <Link href="/about" onClick={() => setIsOpen(false)} className="text-lg font-medium text-text-primary">
             {t.nav.about}
+          </Link>
+          <Link href="/admin/login" onClick={() => setIsOpen(false)} className="text-lg font-medium text-text-primary">
+            {t.nav.admin}
           </Link>
           <div className="h-px bg-gray-100 my-2"></div>
           <a href="tel:+213555555555" className="flex items-center rtl:flex-row-reverse text-primary font-medium">

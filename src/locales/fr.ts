@@ -11,6 +11,7 @@ export const fr = {
         contact: "Contact",
         callUs: "Appelez-nous",
         cart: "Panier",
+        admin: "Admin",
     },
     home: {
         heroTitle: "Élégance & Simplicité",
