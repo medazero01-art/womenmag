@@ -1,4 +1,6 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+// On utilise une URL relative pour passer par le proxy Next.js (rewrites)
+// Cela permet de gérer les cookies comme étant "Same-Site"
+export const API_URL = '/api';
 
 export async function fetchProducts(params?: string) {
     const res = await fetch(`${API_URL}/products?${params || ''}`, {
