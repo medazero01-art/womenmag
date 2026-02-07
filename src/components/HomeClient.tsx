@@ -2,50 +2,64 @@
 
 import Link from 'next/link';
 import ProductCard from '@/components/ui/ProductCard';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Truck, ShieldCheck, Headphones, Star } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function HomeClient({ products, featuredProducts }: { products: any[], featuredProducts: any[] }) {
     const { t, dir } = useLanguage();
 
     return (
-        <div className="space-y-16 pb-16" dir={dir}>
+        <div className="space-y-24 pb-24 bg-background" dir={dir}>
             {/* Hero Section */}
-            <section className="relative h-[80vh] md:h-[600px] flex items-center justify-center bg-secondary/20 overflow-hidden">
-                {/* MAJ-6: Removed Unsplash URL, replaced with a gradient/pattern or could be local static */}
-                {/* For now using a CSS gradient as placeholder for better performance/reliability */}
-                <div className="absolute inset-0 z-0 opacity-50 bg-gradient-to-r from-pink-100 to-indigo-100" />
+            <section className="relative h-[85vh] flex items-center justify-center overflow-hidden bg-[#FDFBFB]">
+                {/* Decorative Elements */}
+                <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-[-10%] left-[-5%] w-[30%] h-[30%] bg-primary/10 rounded-full blur-3xl animate-pulse delay-1000" />
 
-                <div className="relative z-10 text-center px-4 max-w-3xl">
-                    <h1 className="text-4xl md:text-6xl font-bold font-poppins text-text-primary mb-6 leading-tight">
+                <div className="relative z-10 text-center px-4 max-w-4xl">
+                    <span className="inline-block px-4 py-1.5 mb-6 text-xs font-bold tracking-widest uppercase text-primary bg-primary/10 rounded-full">
+                        Nouvelle Collection 2026
+                    </span>
+                    <h1 className="text-5xl md:text-8xl font-serif text-text-primary mb-8 leading-[1.1] tracking-tight">
                         {t.home.heroTitle} <br />
-                        <span className="text-primary">{t.home.heroSubtitle}</span>
+                        <span className="text-primary italic italic-font">{t.home.heroSubtitle}</span>
                     </h1>
-                    <p className="text-lg md:text-xl text-text-secondary mb-8 max-w-xl mx-auto">
+                    <p className="text-lg md:text-xl text-text-secondary mb-12 max-w-2xl mx-auto leading-relaxed font-sans">
                         {t.home.heroDesc}
                     </p>
                     <Link
                         href="/products"
-                        className="inline-flex items-center justify-center px-8 py-4 bg-primary text-white font-semibold rounded-full hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                        className="group relative inline-flex items-center justify-center px-10 py-5 bg-primary/95 text-white font-bold rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-2xl shadow-primary/30 backdrop-blur-md border border-white/20"
                     >
-                        {t.home.cta}
+                        {/* Shimmer Effect */}
+                        <div className="absolute inset-0 w-[200%] h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-[45deg] -translate-x-full group-hover:animate-shimmer" />
+                        
+                        <span className="relative z-10 flex items-center gap-2">
+                            {t.home.cta} 
+                            <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                        </span>
                     </Link>
                 </div>
             </section>
 
-            {/* Categories / Benefits */}
-            <section className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-                {[
-                    { label: t.home.features.delivery, icon: '🚚' },
-                    { label: t.home.features.cod, icon: '💵' },
-                    { label: t.home.features.support, icon: '📞' },
-                    { label: t.home.features.quality, icon: '✨' },
-                ].map((feature, idx) => (
-                    <div key={idx} className="bg-secondary/30 p-6 rounded-xl text-center hover:bg-secondary/50 transition-colors">
-                        <div className="text-3xl mb-3">{feature.icon}</div>
-                        <h3 className="font-medium text-text-primary">{feature.label}</h3>
-                    </div>
-                ))}
+            {/* Reassurance Bar - Minimalist Bento Style */}
+            <section className="container mx-auto px-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                    {[
+                        { label: t.home.features.delivery, icon: <Truck className="w-6 h-6" />, desc: "Livraison rapide 58 wilayas" },
+                        { label: t.home.features.cod, icon: <ShieldCheck className="w-6 h-6" />, desc: "Paiement à la livraison" },
+                        { label: t.home.features.support, icon: <Headphones className="w-6 h-6" />, desc: "Support client 7j/7" },
+                        { label: t.home.features.quality, icon: <Star className="w-6 h-6" />, desc: "Qualité premium garantie" },
+                    ].map((feature, idx) => (
+                        <div key={idx} className="group p-8 bg-white border border-gray-100 rounded-3xl hover:border-primary/20 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+                            <div className="w-12 h-12 flex items-center justify-center bg-primary/5 text-primary rounded-2xl mb-6 group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                                {feature.icon}
+                            </div>
+                            <h3 className="text-lg font-bold text-text-primary mb-2 font-poppins">{feature.label}</h3>
+                            <p className="text-sm text-text-secondary leading-relaxed">{feature.desc}</p>
+                        </div>
+                    ))}
+                </div>
             </section>
 
             {/* Featured Products */}
