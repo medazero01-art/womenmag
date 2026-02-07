@@ -9,13 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#D16C7C", // Rose terracotta
-        secondary: "#F5EFEA", // Beige chaud
-        background: "#FAFAFA", // Blanc cassé
+        primary: "#D3757F", // Rose Bordeaux élégant
+        secondary: "#FAFAFA", // Blanc cassé premium
+        background: "#FAFAFA",
         text: {
-          primary: "#1F1F1F",
-          secondary: "#6B6B6B",
-          disabled: "#A8A8A8",
+          primary: "#1A1A1A", // Noir intense
+          secondary: "#4B4B4B",
+          disabled: "#9CA3AF",
         },
         success: "#2E8B57",
         error: "#C0392B",
@@ -23,7 +23,20 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
+        serif: ["var(--font-playfair)", "serif"],
         poppins: ["var(--font-poppins)", "sans-serif"],
+      },
+      borderRadius: {
+        '2xl': '1.5rem',
+        '3xl': '2rem',
+      },
+      keyframes: {
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        }
+      },
+      animation: {
+        shimmer: 'shimmer 1.5s infinite',
       },
       container: {
         center: true,
